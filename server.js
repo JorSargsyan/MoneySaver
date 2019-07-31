@@ -11,7 +11,7 @@ app.use(express.json({extended:false}));
 //init routes
 app.use("/api/users",require("./routes/api/users"));
 app.use("/api/auth",require("./routes/api/auth"));
-// app.use("/api/transactions",require("./routes/api/transactions"));
+app.use("/api/transactions",require("./routes/api/transactions"));
  app.use("/api/categories",require("./routes/api/categories"));
  app.use("/api/transactionTypes",require("./routes/api/transactionTypes"));
 

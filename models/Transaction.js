@@ -3,7 +3,8 @@ mongoose = require("mongoose");
 const TransactionSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true
+        required:true,
+        ref:"user"
     },
     amount:{
         type:Number,
@@ -12,13 +13,13 @@ const TransactionSchema = new mongoose.Schema({
     note :{
         type:String
     },
-    categoryId:{
+    category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "categories"
+        ref: "category"
     },
-    transactionTypeId : {
+    transactionType : {
         type:mongoose.Schema.Types.ObjectId,
-        ref : "transactionTypes"
+        ref : "transactionType"
     },
     date:{
         type:Date,

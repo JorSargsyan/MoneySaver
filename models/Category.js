@@ -7,19 +7,19 @@ const CategorySchema = new mongoose.Schema({
     },
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        refs: "users"
+        ref: "user"
     },
     icon:{
         type:String,
     },
-    transactionTypeId:{
+    transactionType:{
         type:mongoose.Schema.Types.ObjectId,
-        ref : "transactiontypes",
+        ref : "transactiontype",
         required:true,
     },
     parentId : {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"categories",
+        ref:"category",
         default:null
     },
     creationDate : {

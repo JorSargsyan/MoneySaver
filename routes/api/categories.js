@@ -29,11 +29,9 @@ router.post("/addPublic",[
             return res.status(400).json({msg:"Not valid transaction type"});
         }
 
-
-
         let category = new Category({
             name,
-            transactionTypeId : transactiontype
+            transactionType: transactiontype
         })
 
         await category.save();
@@ -45,6 +43,11 @@ router.post("/addPublic",[
         res.status(500).send("Internal Server error");
     }
 }))
+
+
+//@route        POST api/categories
+//@desc         get all public categories
+//@access       public
 
 
 
