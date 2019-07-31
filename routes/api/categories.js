@@ -3,7 +3,7 @@ const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const User = require("../../models/User");
 const TransactionType = require("../../models/TransactionType");
-
+const Category = require("../../models/Category");
 const router = express.Router();
 
 
@@ -12,25 +12,41 @@ const router = express.Router();
 //@access       public
 
 
-// router.post("/addPublic",[
-//     check("name","Name is required").not().isEmpty(),
-//     check("name","Please select transaction type").not().isEmpty(),
-// ],(async(req,res)=>{
-//     const errors = validationResult(req);
+router.post("/addPublic",[
+    check("name","Name is required").not().isEmpty(),
+    check("type","Please select transaction type").isString().not().isEmpty(),
+],(async(req,res)=>{
+    const errors = validationResult(req);
+    let {name,type} = req.body;
 
-//     if(!errors.isEmpty()){
-//         return res.status(500).json({errors:errors.array()});
-//     }
-//     try {
-        
-//         let category = new category({
+    if(!errors.isEmpty()){
+        return res.status(500).json({errors:errors.array()});
+    }
+    try {
+        let transactiontype = await TransactionType.findOne({"name": type})
 
-//         })
-//     } catch (error) {
-        
-//     }
-// }))
+        if(!transactiontype){
+            return res.status(400).json({msg:"Not valid transaction type"});
+        }
 
 
 
+        let category = new Category({
+            name,
+            transactionTypeId : transactiontype
+        })
 
+        await category.save();
+
+        res.json(category);
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Internal Server error");
+    }
+}))
+
+
+
+
+module.exports = router;
