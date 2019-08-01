@@ -22,15 +22,13 @@ router.post("/", [
 ], (async (req, res) => {
     const errors = validationResult(req);
     let { amount, note, category, type } = req.body;
-    debugger;
     if (!errors.isEmpty()) {
         return res.status(500).json({ errors: errors.array() });
     }
     try {
-
-        let user = await User.findById(req.user.id);
         let selectedcategory = await Category.findOne({ "name": category });
         let transactionType = await TransactionType.findOne({ "name": type });
+
 
         const newTransaction = new Transaction({
             user: req.user.id,
@@ -52,15 +50,17 @@ router.post("/", [
     }
 }))
 
-//@route        POST api/transactions
-//@desc         add a new transaction
+
+
+//@route        POST api/transactions/getAllTransactions
+//@desc         GET ALL TRANSACTIONS
 //@access       private
 
-router.get("/", auth, async (req, res) => {
+router.get("/getAllTransactions", auth, async (req, res) => {
     try {
 
         let user = await User.findById(req.user.id);
-        let TransactionList = await Transaction.find({user:user._id}).populate("category", ['name']).populate("transactionType", ['name']);
+        let TransactionList = await Transaction.find({ user: user._id }).populate("category", ['name']).populate("transactionType", ['name']);
 
         res.json(TransactionList);
     } catch (error) {
@@ -70,70 +70,99 @@ router.get("/", auth, async (req, res) => {
 })
 
 
-//@route    GET api/getCharInfo
-//@Desc     get all calculations to view in the chart.
+//@route        POST api/transactions/getAllTransactionsByDate
+//@desc         get all transactions by date
+//@access       private
+
+router.post("/getAllTransactionsByDate", auth, async (req, res) => {
+    try {
+        let { from, to } = req.body;
+
+        fromDate = new Date(from).toISOString();
+        toDate = new Date(to).toISOString();
+        let user = await User.findById(req.user.id);
+        let TransactionList = await Transaction.find(
+            {
+                "user": user._id, "date":
+                { $gte: fromDate, $lte: toDate }
+            }).populate("category", ['name']).populate("transactionType", ['name']);
+
+        res.json(TransactionList);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Internal Server error");
+    }
+})
+
+
+//@route    GET api/getChartInfoByDate
+//@Desc     get all calculations by date to view in the chart.
 //@access   private
 
-
-router.get("/getChartInfo",auth, async (req, res) => {
+router.post("/getChartInfoByDate", auth, async (req, res) => {
     try {
+        let { from, to } = req.body;
 
-
+        fromDate = new Date(from).toISOString();
+        toDate = new Date(to).toISOString();
         let user = await User.findById(req.user.id);
-        let TransactionList = await Transaction.find({user:user._id}).populate("category", ['name']).populate("transactionType", ['name']);
+        let TransactionList = await Transaction.find( {
+            "user": user._id, "date":
+            { $gte: fromDate, $lte: toDate }
+        }).populate("category", ['name']).populate("transactionType", ['name']);
 
         //Calculate the balance
         let TotalBalance = 0;
-        let ExpenseAmount= 0;
+        let ExpenseAmount = 0;
         let IncomeAmount = 0;
         let expenses = [];
         let incomes = [];
-        
-        TransactionList.map((item)=>{
-            if(item.transactionType.name === "Expense"){
+
+        TransactionList.map((item) => {
+            if (item.transactionType.name === "Expense") {
                 TotalBalance -= item.amount;
                 ExpenseAmount += item.amount;
-                let existingCategoryIndex = expenses.findIndex(i=>i.category === item.category.name);
-                if(existingCategoryIndex > -1){
-                    expenses = [...expenses,{
-                            "amount": expenses[existingCategoryIndex].amount + item.amount,
-                            "category": expenses[existingCategoryIndex].category
+                let existingCategoryIndex = expenses.findIndex(i => i.category === item.category.name);
+                if (existingCategoryIndex > -1) {
+                    expenses = [...expenses, {
+                        "amount": expenses[existingCategoryIndex].amount + item.amount,
+                        "category": expenses[existingCategoryIndex].category
                     }]
-                    expenses.splice(existingCategoryIndex,1);
+                    expenses.splice(existingCategoryIndex, 1);
                 }
-                else{
-                    expenses.push({"amount":item.amount,"category":item.category.name});
+                else {
+                    expenses.push({ "amount": item.amount, "category": item.category.name });
                 }
-               
+
             }
-            else{
+            else {
                 TotalBalance += item.amount;
                 IncomeAmount += item.amount;
 
-                let existingCategoryIndex = incomes.findIndex(i=>i.category === item.category.name);
-                if(existingCategoryIndex > -1){
-                    incomes = [...incomes,{
-                            "amount": incomes[existingCategoryIndex].amount + item.amount,
-                            "category": incomes[existingCategoryIndex].category
+                let existingCategoryIndex = incomes.findIndex(i => i.category === item.category.name);
+                if (existingCategoryIndex > -1) {
+                    incomes = [...incomes, {
+                        "amount": incomes[existingCategoryIndex].amount + item.amount,
+                        "category": incomes[existingCategoryIndex].category
                     }]
-                    incomes.splice(existingCategoryIndex,1);
+                    incomes.splice(existingCategoryIndex, 1);
                 }
-                else{
-                    incomes.push({"amount":item.amount,"category":item.category.name})
+                else {
+                    incomes.push({ "amount": item.amount, "category": item.category.name })
                 }
 
-               
+
             }
         })
 
-        expenses.map((i)=>{
-            i.percent = Math.round((100 * i.amount) / ExpenseAmount );
+        expenses.map((i) => {
+            i.percent = Math.round((100 * i.amount) / ExpenseAmount);
         })
 
-        incomes.map((i)=>{
-            i.percent = Math.round((100 * i.amount) / IncomeAmount );
+        incomes.map((i) => {
+            i.percent = Math.round((100 * i.amount) / IncomeAmount);
         })
-      
+
         const resData = {
             TotalBalance,
             ExpenseAmount,
@@ -144,7 +173,7 @@ router.get("/getChartInfo",auth, async (req, res) => {
 
 
         res.json(resData);
-       
+
 
 
     } catch (err) {
