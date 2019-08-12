@@ -21,7 +21,6 @@ router.get("/",authMiddleware,( async (req,res)=>{
 }))
 
 
-
 //@route        POST api/auth
 //@desc         authenticate user & get token
 //@access       public
