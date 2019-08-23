@@ -13,12 +13,14 @@ export default function (state = initialState,{type,payload}){
             return {
                 ...state,
                 transactions : payload,
+                loading:false,
             }
         }
         case GET_TRANSACTIONS_FAIL : {
             return {
                 ...state,
                 transactions : null,
+                loading:false,
             }
         }
         default:

@@ -1,6 +1,6 @@
-import React, { useEffect, Fragment,useState } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import {getAllTransactionsByDate} from "../../actions/index";
+import { getAllTransactionsByDate } from "../../actions/index";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,7 +13,7 @@ import Fab from '@material-ui/core/Fab';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import * as moment from "moment"
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 650,
     },
-    absolute :{
+    absolute: {
         position: 'absolute',
         bottom: theme.spacing(2),
         right: theme.spacing(3),
@@ -35,21 +35,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function TransactionsList({ getAllTransactionsByDate, allTransactions }) {
+function TransactionsList({ getAllTransactionsByDate, transactions }) {
 
-    const [fromDate,setFromDate] = useState("")
+    const [fromDate, setFromDate] = useState("");
 
-    const [toDate,setToDate] = useState("")
+    const [toDate, setToDate] = useState("");
 
     useEffect(() => {
-        if(!fromDate && !toDate){
-            setFromDate(moment());
-            setToDate(moment().subtract(3,"months"))
-            
+        setFromDate(moment().subtract(3, "months").format("YYYY/MM/DD"));
+        setToDate(moment().add(1, "days").format("YYYY/MM/DD"))
+        if(fromDate && toDate){
+            getAllTransactionsByDate(fromDate, toDate);
         }
-        getAllTransactionsByDate(fromDate,toDate);
-    },[]);
-
+      
+    }, [fromDate, toDate]);
 
 
     const classes = useStyles();
@@ -68,15 +67,15 @@ function TransactionsList({ getAllTransactionsByDate, allTransactions }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {allTransactions && allTransactions.map(row => (
-                            <TableRow key={row.name}>
-                                {/* <TableCell component="th" scope="row">
-                                    {row.name}
+                        {transactions && transactions.map(row => (
+                            <TableRow key={row._id}>
+                                 <TableCell component="th" scope="row">
+                                    {row.date}
                                 </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
-                                <TableCell align="right">{row.fat}</TableCell>
-                                <TableCell align="right">{row.carbs}</TableCell>
-                                <TableCell align="right">{row.protein}</TableCell> */}
+                                <TableCell align="right">{row.category.name}</TableCell>
+                                <TableCell align="right">{row.amount}</TableCell>
+                                <TableCell align="right">{row.transactionType.name}</TableCell>
+                                <TableCell align="right">{row.note}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -96,8 +95,8 @@ TransactionsList.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
-    allTransactions: state.transactions.transactionsList,
+    transactions: state.transactions.transactionsList,
 })
 
-export default connect(mapStateToProps,{getAllTransactionsByDate})(TransactionsList);
+export default connect(mapStateToProps, { getAllTransactionsByDate })(TransactionsList);
 
