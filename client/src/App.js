@@ -8,7 +8,7 @@ import PrivateRoute from "./components/routing/PrivateRoute"
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard/Dashboard";
-
+import TransactionsList from "./components/transactions/TransactionsList";
 
 
 
@@ -27,9 +27,10 @@ function App() {
       <Provider store={store}>
       <Router>
         <Switch>
-          <PrivateRoute exact path="/" component={Dashboard}></PrivateRoute>
           <Route exact path='/login' component={Login}></Route> 
           <Route exact path='/register' component={Register}></Route>  
+          <PrivateRoute exact path="/" component={Dashboard}></PrivateRoute>
+          <PrivateRoute exact path="/transactions" component={TransactionsList}></PrivateRoute>
         </Switch>
       </Router> 
       </Provider>

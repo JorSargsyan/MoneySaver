@@ -1,4 +1,4 @@
-import { USER_LOADED , AUTH_ERROR , REGISTER_SUCCESS, LOGIN_FAIL,LOGIN_SUCCESS,LOGOUT} from "./types";
+import { USER_LOADED , AUTH_ERROR , REGISTER_SUCCESS, LOGIN_FAIL,LOGIN_SUCCESS,LOGOUT,GET_TRANSACTIONS_SUCCESS, GET_TRANSACTIONS_FAIL} from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken"
 
@@ -88,24 +88,39 @@ export const getAllTransactions = ()=>{
     return async dispatch => {
         try {
             const res = await axios.get("/api/transactions/getAllTransactions");
-
             console.log(res);
-
         } catch (error) {
             dispatch({
-                type:LOGIN_FAIL
+                type:GET_TRANSACTIONS_FAIL
             })
         }
     }
 }
 
-export const getAllTransactionsByDate = ({from,to})=>{
+export const getAllTransactionsByDate = (from,to)=>{
     return async dispatch=>{
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+
+        let body = {
+            from,
+            to
+        }
         try {
-            const res = await axios.post("getAllTransactionsByDate");
+            const res = await axios.post("/api/transactions/getAllTransactionsByDate",body,config);
+
+            dispatch({
+                type : GET_TRANSACTIONS_SUCCESS,
+                payload  :res.data
+            })
+
         } catch (error) {
             dispatch({
-                type:LOGIN_FAIL
+                type:GET_TRANSACTIONS_FAIL
             })
         }
     }
