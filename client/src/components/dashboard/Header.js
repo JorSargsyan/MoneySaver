@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {logout} from "../../actions/index";
 import {connect} from "react-redux"
+import {Link} from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,6 +36,7 @@ function Header({logout}) {
                             <Typography variant="h6" className={classes.title}>
                                 Money Saver
                             </Typography>
+                            <Button color="inherit"><Link to='/home'>Home</Link></Button>
                             <Button onClick={e=>handleLogout(e)} color="inherit">
                                 LOG OUT
                             </Button>
