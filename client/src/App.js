@@ -11,6 +11,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 
 
 
+
 function App() {
 
   if(localStorage.token){
@@ -27,8 +28,8 @@ function App() {
       <Router>
         <Switch>
           <Route exact path='/login' component={Login}></Route> 
-          <Route exact path='/register' component={Register}></Route>  
-          <PrivateRoute exact path="/" component={Dashboard}></PrivateRoute>
+          <Route  path='/register' component={Register}></Route>  
+          <PrivateRoute path="/dashboard" component={Dashboard}></PrivateRoute>
         </Switch>
       </Router> 
       </Provider>

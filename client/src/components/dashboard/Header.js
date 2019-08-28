@@ -34,9 +34,9 @@ function Header({logout}) {
                     <AppBar position="static">
                         <Toolbar>
                             <Typography variant="h6" className={classes.title}>
-                                Money Saver
+                            <Link to='/dashboard'>Money Saver</Link>
                             </Typography>
-                            <Button color="inherit"><Link to='/home'>Home</Link></Button>
+                            <Button color="inherit"><Link to="/dashboard/history">History</Link></Button>
                             <Button onClick={e=>handleLogout(e)} color="inherit">
                                 LOG OUT
                             </Button>
