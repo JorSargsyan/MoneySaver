@@ -10,10 +10,7 @@ import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard/Dashboard";
 
 
-
-
 function App() {
-
   if(localStorage.token){
     setAuthToken(localStorage.token);
   }
@@ -27,6 +24,7 @@ function App() {
       <Provider store={store}>
       <Router>
         <Switch>
+        <Route exact path='/' component={Login}></Route> 
           <Route exact path='/login' component={Login}></Route> 
           <Route  path='/register' component={Register}></Route>  
           <PrivateRoute path="/dashboard" component={Dashboard}></PrivateRoute>

@@ -1,4 +1,4 @@
-import { USER_LOADED , AUTH_ERROR , REGISTER_SUCCESS, LOGIN_FAIL,LOGIN_SUCCESS,LOGOUT,GET_TRANSACTIONS_SUCCESS, GET_TRANSACTIONS_FAIL, SET_FROM_DATE,SET_TO_DATE} from "./types";
+import { USER_LOADED , AUTH_ERROR , REGISTER_SUCCESS, LOGIN_FAIL,LOGIN_SUCCESS,LOGOUT,GET_TRANSACTIONS_SUCCESS, GET_TRANSACTIONS_FAIL, SET_FROM_DATE,SET_TO_DATE,GET_CHART_INFO_SUCCESS,GET_CHART_INFO_FAIL} from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken"
 
@@ -146,25 +146,28 @@ export const setToDate = (date)=>{
 
 }
 
-// export const getChartInfo = (from,to)=>{
-//     return async dispatch => {
-//         try {
-//             let config = {
-//                 headers: {
-//                     "Content-Type": "application/json"
-//                 }
-//             }
+export const getChartInfo = (from,to)=>{
+    return async dispatch => {
+        try {
+            let config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
     
-//             let body = {
-//                 from,
-//                 to
-//             }
-//             const res = await axios.post("/api/transactions/getChartInfoByDate",body,config);
-//             console.log(res);
-//         } catch (error) {
-//             dispatch({
-//                 type:GET_TRANSACTIONS_FAIL
-//             })
-//         }
-//     }
-// }
+            let body = {
+                from,
+                to
+            }
+            const res = await axios.post("/api/transactions/getChartInfoByDate",body,config);
+            dispatch({
+                type:GET_CHART_INFO_SUCCESS,
+                payload : res.data
+            })
+        } catch (error) {
+            dispatch({
+                type:GET_CHART_INFO_FAIL
+            })
+        }
+    }
+}
