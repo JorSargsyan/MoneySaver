@@ -24,13 +24,13 @@ function DatePickerTab({setToDate,setFromDate,fromDate,toDate}) {
     }
 
     const handleChangeToDate = (date) => {
-        setToDate(moment(date).format("YYYY/MM/DD"));
+        setToDate(moment(date).add(1,"days").format("YYYY/MM/DD"));
     }
     const classes = useStyles();
 
     return (
                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="flex-start">
+                        <Grid  container justify="flex-start">
                             <KeyboardDatePicker
                                 margin="normal"
                                 className={classes.datePickerCustom}
@@ -51,7 +51,6 @@ function DatePickerTab({setToDate,setFromDate,fromDate,toDate}) {
                                 id="date-picker-dialog"
                                 label="Select To Date"
                                 format="yyyy/MM/dd"
-                                disableFuture
                                 value={toDate}
                                 onChange={handleChangeToDate}
                                 KeyboardButtonProps={{
