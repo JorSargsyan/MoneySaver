@@ -1,4 +1,4 @@
-import {LOGOUT,GET_TRANSACTIONS_SUCCESS,GET_TRANSACTIONS_FAIL,SET_TO_DATE,SET_FROM_DATE,GET_CHART_INFO_FAIL,GET_CHART_INFO_SUCCESS} from "../actions/types";
+import {ADD_TRANSACTION_SUCCESS,ADD_TRANSACTION_FAIL,LOGOUT,GET_TRANSACTIONS_SUCCESS,GET_TRANSACTIONS_FAIL,SET_TO_DATE,SET_FROM_DATE,GET_CHART_INFO_FAIL,GET_CHART_INFO_SUCCESS} from "../actions/types";
 import * as moment from "moment"
 
 const initialState = {
@@ -78,6 +78,19 @@ export default function (state = initialState,{type,payload}){
                 charts : {
                     loading:false
                 }
+            }
+        }
+        case ADD_TRANSACTION_SUCCESS : {
+            return {
+                ...state,
+                transactions : payload,
+                loading: false
+            }
+        }
+        case ADD_TRANSACTION_FAIL : {
+            return {
+                ...state,
+                loading : false
             }
         }
         case LOGOUT : {

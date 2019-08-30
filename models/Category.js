@@ -14,7 +14,7 @@ const CategorySchema = new mongoose.Schema({
     },
     transactionType:{
         type:mongoose.Schema.Types.ObjectId,
-        ref : "transactiontype",
+        ref : "transactionType",
         required:true,
     },
     parentId : {

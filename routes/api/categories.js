@@ -5,6 +5,7 @@ const User = require("../../models/User");
 const TransactionType = require("../../models/TransactionType");
 const Category = require("../../models/Category");
 const router = express.Router();
+const auth = require("../../middleware/auth")
 
 
 //@route        POST api/categories
@@ -48,6 +49,21 @@ router.post("/addPublic",[
 //@route        POST api/categories
 //@desc         get all public categories
 //@access       public
+router.get("/getAllCategories",auth,async(req,res)=>{
+    try {
+        let CategoriesList = await Category.find().populate("transactionType", ['name']);
+
+        if(!CategoriesList){
+            return res.status(400);
+        }
+
+        res.json(CategoriesList);
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Internal Server error");
+    }
+})
 
 
 

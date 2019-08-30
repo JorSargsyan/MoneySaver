@@ -38,11 +38,11 @@ const useStyles = makeStyles(theme => ({
 
 
 
-function Chart({ fromDate, toDate, loading, getChartInfo, chartInfo ,expenseChartData ,incomeChartData}) {
+function Chart({ fromDate, toDate, loading,transactions ,getChartInfo, chartInfo ,expenseChartData ,incomeChartData}) {
     const classes = useStyles();
     useEffect(() => {
         getChartInfo(fromDate, toDate);
-    }, [fromDate, toDate])
+    }, [fromDate, toDate , transactions])
 
     
     return (
@@ -82,6 +82,7 @@ const mapStateToProps = (state) => ({
     toDate: state.transactions.toDate,
     fromDate: state.transactions.fromDate,
     loading: state.transactions.charts.loading,
+    transactions : state.transactions.transactions,
     chartInfo: state.transactions.charts.chartData,
     expenseChartData : state.transactions.charts.expenseChartData,
     incomeChartData :state.transactions.charts.incomeChartData

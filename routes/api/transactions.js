@@ -28,7 +28,7 @@ router.post("/", [
     try {
         let selectedcategory = await Category.findOne({ "name": category });
         let transactionType = await TransactionType.findOne({ "name": type });
-
+       
 
         const newTransaction = new Transaction({
             user: req.user.id,
@@ -40,8 +40,9 @@ router.post("/", [
 
 
         await newTransaction.save();
+        let transactions = await Transaction.find({user : req.user.id});
 
-        res.json(newTransaction);
+        res.json(transactions);
 
 
     } catch (error) {
