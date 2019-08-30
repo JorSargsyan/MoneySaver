@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function SignIn({login,isAuthenticated}) {
+function SignIn({login,isAuthenticated,userLoading}) {
   const classes = useStyles();
 
   const [formData,setFormData] = useState({
@@ -61,7 +61,6 @@ function SignIn({login,isAuthenticated}) {
     }
     login(newUser);
   }
-
 
   if(isAuthenticated){
     return <Redirect to="/dashboard" />
@@ -129,6 +128,7 @@ function SignIn({login,isAuthenticated}) {
 
 const mapStateToProps = (state)=>({
   isAuthenticated : state.auth.isAuthenticated,
+  // userLoading : state.auth.userData.loading
 })
 
 export default connect(mapStateToProps,{login})(SignIn)

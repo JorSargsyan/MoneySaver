@@ -4,7 +4,11 @@ const initialState = {
     isAuthenticated : false,
     isRegistered  :false,
     loading : true,
-    user : null
+    user : null,
+    userData:{
+        data : null,
+        loading:true
+    }
 }
 
 
@@ -15,7 +19,10 @@ export default function (state = initialState,{type,payload}){
                 ...state,
                 isAuthenticated : true,
                 loading : false,
-                user : payload,
+                userData : {
+                    data : payload,
+                    loading : false
+                },
                 isRegistered: false,
             }
         }
@@ -43,7 +50,11 @@ export default function (state = initialState,{type,payload}){
                 isAuthenticated: false,
                 isRegistered : false,
                 loading : false,
-                user : null
+                user : null,
+                userData : {
+                    data : null,
+                    loading:true
+                }
             }
         }
         default:

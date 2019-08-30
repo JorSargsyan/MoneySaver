@@ -12,7 +12,9 @@ import {
     GET_CHART_INFO_FAIL,
     ADD_TRANSACTION_FAIL,
     GET_ALL_CATEGORIES_SUCCESS,
-    GET_ALL_CATEGORIES_FAIL
+    GET_ALL_CATEGORIES_FAIL,
+    ADD_CATEGORY_SUCCESS,
+    ADD_CATEGORY_FAIL
 } from "./types";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken"
@@ -206,6 +208,29 @@ export const addTransaction = (formData) => {
         catch (err) {
             dispatch({
                 type: ADD_TRANSACTION_FAIL
+            })
+        }
+    }
+}
+
+export const addCategoryPublic = (formData) => {
+    return async dispatch => {
+        try {
+            let config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const res = await axios.post("/api/categories/addPublic", formData, config);
+
+            dispatch({
+                type: ADD_CATEGORY_SUCCESS,
+                payload : res.data
+            })
+        }
+        catch (err) {
+            dispatch({
+                type: ADD_CATEGORY_FAIL
             })
         }
     }

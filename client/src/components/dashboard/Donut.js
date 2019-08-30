@@ -9,12 +9,6 @@ class Donut extends Component {
 
     this.state = {
       options: {
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return val + "%"
-          }
-        },
         plotOptions: {
           pie: {
             expandOnClick: false

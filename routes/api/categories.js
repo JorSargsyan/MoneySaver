@@ -30,14 +30,21 @@ router.post("/addPublic",[
             return res.status(400).json({msg:"Not valid transaction type"});
         }
 
-        let category = new Category({
+        let category = await Category.findOne({name : name});
+        if(category){
+            return res.status(400).json({msg:"Not valid Category name"});
+        }
+
+        let Newcategory = new Category({
             name,
             transactionType: transactiontype
         })
 
-        await category.save();
+        await Newcategory.save();
 
-        res.json(category);
+        let CategoriesList = await Category.find().populate("transactionType", ['name']);
+
+        res.json(CategoriesList);
 
     } catch (error) {
         console.log(error.message);

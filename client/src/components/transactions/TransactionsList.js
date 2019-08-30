@@ -4,11 +4,9 @@ import { getAllTransactionsByDate } from "../../actions/index";
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { connect } from "react-redux";
-import Header from "../dashboard/Header"
-import DatePickerTab from "../dashboard/DatePickerTab"
 import Spinner from "../layout/Spinner"
-
-import TableComponent from "../layout/TableComponent"
+import MaterialTable from "../layout/MaterialTable"
+import Moment from "react-moment"
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,38 +34,39 @@ const useStyles = makeStyles(theme => ({
 
 function TransactionsList({ getAllTransactionsByDate, transactions, loading ,fromDate,toDate }) {
 
+    const [data,setData] = useState([]);
+
     useEffect(() => {
         getAllTransactionsByDate(fromDate, toDate);
-    }, [fromDate, toDate])
+      
+    }, [fromDate, toDate,getAllTransactionsByDate])
 
+
+    useEffect(()=>{
+        if(transactions != null){
+            refactorTransactionsData(transactions);
+        }  
+    },[transactions])
+
+   
+    const refactorTransactionsData = (data)=>{
+          let res = data.map((item)=>{
+                return {
+                    type : item.transactionType.name,
+                    category : item.category.name,
+                    amount : item.amount,
+                    note : item.note,
+                    date : <Moment format="DD/MM/YYYY hh:mm:ss" >{item.date}</Moment>
+                }
+            })
+            setData(res); 
+     }
     const classes = useStyles();
-    const headersList = [
-        {
-            title : "Transaction Type",
-            sortable : false,
-        },
-        {
-            title : "Transaction name",
-            sortable : true,
-        },
-        {
-            title : "Amount",
-            sortable : false,
-        },
-        {
-            title : "Note",
-            sortable : false,
-        },
-        {
-            title : "Date",
-            sortable : false,
-        }
-    ]
     return (
         <Fragment>
-            {!loading ? (
+            {!loading && data ? (
                     <Paper className={classes.root}>
-                        <TableComponent transactions={transactions} headersList={headersList} />
+                        <MaterialTable transactions={data}/>
                     </Paper>
             ) : <Spinner />
             }

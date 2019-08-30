@@ -1,4 +1,4 @@
-import React, { useEffect ,Fragment} from 'react';
+import React, { Fragment } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,9 +9,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
-import { addTransaction } from "../../actions/index"
 import { connect } from 'react-redux';
-import { getAllCategories } from "../../actions/index"
+import { addCategoryPublic } from "../../actions/index"
 
 const useStyles = makeStyles(theme => ({
     select: {
@@ -23,11 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
-
-    useEffect(() => {
-        getAllCategories();
-    }, [getAllCategories])
+function FormDialog({ addCategoryPublic}) {
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -42,9 +37,7 @@ function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
 
 
     const [values, setValues] = React.useState({
-        category: "",
-        note: "",
-        amount: "",
+        name: "",
         type: ""
     });
 
@@ -62,17 +55,13 @@ function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
         event.preventDefault();
 
         let formData = {
-            category: values.category,
-            note: values.note,
-            amount: values.amount,
+            name: values.name,
             type: values.type
         }
 
-        addTransaction(formData);
+        addCategoryPublic(formData);
         setValues(() => ({
-            category: "",
-            note: "",
-            amount: "",
+            name: "",
             type: ""
         }));
         setOpen(false);
@@ -81,29 +70,20 @@ function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
     return (
         <Fragment>
             <Button variant="outlined" color="primary" className={classes.btn} onClick={handleClickOpen}>
-                Add transaction
+                Add Category
             </Button>
             <Dialog fullWidth={true} open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Add Transaction</DialogTitle>
+                <DialogTitle id="form-dialog-title">Add Category</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
                         margin="dense"
-                        name="note"
-                        label="Any Notes"
+                        name="name"
+                        label="Category Name"
                         type="text"
                         fullWidth
                         onChange={handleChange}
-                        value={values.note}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="amount"
-                        label="Amount"
-                        type="number"
-                        fullWidth
-                        value={values.amount}
-                        onChange={handleChange}
+                        value={values.name}
                     />
                     <div className={classes.select}>
                         <InputLabel htmlFor="category">Type</InputLabel>
@@ -121,32 +101,6 @@ function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
                             <MenuItem value="Expense">Expense</MenuItem>
                         </Select>
                     </div>
-                    {
-                        values.type &&
-                        <div className={classes.select}>
-                            <InputLabel htmlFor="category">Category</InputLabel>
-                            <Select
-                                fullWidth
-
-                                value={values.category}
-                                onChange={handleChange}
-                                inputProps={{
-                                    name: 'category',
-                                    id: 'category',
-                                }}
-                            >
-                                {
-                                    categories && categories.map(item => {
-                                        if (item.transactionType.name === values.type) {
-                                            return <MenuItem key={item._id} value={item.name}>{item.name}</MenuItem>
-                                        }
-                                        return false
-                                    })
-                                }
-
-                            </Select>
-                        </div>
-                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
@@ -161,9 +115,4 @@ function FormDialog({ addTransaction, getAllCategories, categories, loading }) {
     );
 }
 
-const mapStateToProps = (state) => ({
-    categories: state.categories.categories,
-    loading: state.categories.loading
-})
-
-export default connect(mapStateToProps, { addTransaction, getAllCategories })(FormDialog)
+export default connect(null, {addCategoryPublic })(FormDialog)

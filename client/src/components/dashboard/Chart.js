@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState, useRef } from 'react';
+import React, { useEffect, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from "react-redux";
@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Donut from "../dashboard/Donut"
 import AddTransactionDialog from "../transactions/AddTransactionDialog"
-
+import AddCategoryDialog from "../transactions/AddCategoryDialog"
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(3, 2),
@@ -33,16 +33,23 @@ const useStyles = makeStyles(theme => ({
     },
     textAlign: {
         textAlign: "center"
+    },
+    toolbar: {
+        display:"flex",
+        justifyContent : "flex-start"
     }
 }));
 
 
 
-function Chart({ fromDate, toDate, loading,transactions ,getChartInfo, chartInfo ,expenseChartData ,incomeChartData}) {
+
+function Chart({userLoading,transactions, fromDate, toDate, loading ,getChartInfo, chartInfo ,expenseChartData ,incomeChartData}) {
     const classes = useStyles();
     useEffect(() => {
-        getChartInfo(fromDate, toDate);
-    }, [fromDate, toDate , transactions])
+        if(!userLoading){
+            getChartInfo(fromDate, toDate);
+        }
+    }, [fromDate, toDate ,userLoading,transactions,getChartInfo])
 
     
     return (
@@ -67,7 +74,11 @@ function Chart({ fromDate, toDate, loading,transactions ,getChartInfo, chartInfo
                           <Donut labels={incomeChartData.labels} series={incomeChartData.series} />
                     </Paper>
                 </div>
-                <AddTransactionDialog className={classes.addTransactionBtn}/>
+                <div className={classes.toolbar}>
+                <AddTransactionDialog />
+                <AddCategoryDialog />
+                </div>
+                
             </Fragment>
             : <Spinner />
     )
@@ -79,6 +90,7 @@ Chart.propTypes = {
 }
 
 const mapStateToProps = (state) => ({
+    userLoading : state.auth.userData.loading,
     toDate: state.transactions.toDate,
     fromDate: state.transactions.fromDate,
     loading: state.transactions.charts.loading,

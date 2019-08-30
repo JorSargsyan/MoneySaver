@@ -3,7 +3,7 @@ import Header from "./Header"
 import Chart from "./Chart"
 import DatePickerTab from './DatePickerTab';
 import { makeStyles } from '@material-ui/core/styles';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import PrivateRoute from "../routing/PrivateRoute"
 import TransactionsList from '../transactions/TransactionsList';
 import Paper from '@material-ui/core/Paper';
