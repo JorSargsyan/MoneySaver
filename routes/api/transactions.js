@@ -118,43 +118,44 @@ router.post("/getChartInfoByDate", auth, async (req, res) => {
         let IncomeAmount = 0;
         let expenses = [];
         let incomes = [];
-
-        TransactionList.map((item) => {
-            if (item.transactionType.name === "Expense") {
-                TotalBalance -= item.amount;
-                ExpenseAmount += item.amount;
-                let existingCategoryIndex = expenses.findIndex(i => i.category === item.category.name);
-                if (existingCategoryIndex > -1) {
-                    expenses = [...expenses, {
-                        "amount": expenses[existingCategoryIndex].amount + item.amount,
-                        "category": expenses[existingCategoryIndex].category
-                    }]
-                    expenses.splice(existingCategoryIndex, 1);
+        if(TransactionList.length){
+            TransactionList.map((item) => {
+                if (item.transactionType.name === "Expense") {
+                    TotalBalance -= item.amount;
+                    ExpenseAmount += item.amount;
+                    let existingCategoryIndex = expenses.findIndex(i => i.category === item.category.name);
+                    if (existingCategoryIndex > -1) {
+                        expenses = [...expenses, {
+                            "amount": expenses[existingCategoryIndex].amount + item.amount,
+                            "category": expenses[existingCategoryIndex].category
+                        }]
+                        expenses.splice(existingCategoryIndex, 1);
+                    }
+                    else {
+                        expenses.push({ "amount": item.amount, "category": item.category.name });
+                    }
+    
                 }
                 else {
-                    expenses.push({ "amount": item.amount, "category": item.category.name });
+                    TotalBalance += item.amount;
+                    IncomeAmount += item.amount;
+    
+                    let existingCategoryIndex = incomes.findIndex(i => i.category === item.category.name);
+                    if (existingCategoryIndex > -1) {
+                        incomes = [...incomes, {
+                            "amount": incomes[existingCategoryIndex].amount + item.amount,
+                            "category": incomes[existingCategoryIndex].category
+                        }]
+                        incomes.splice(existingCategoryIndex, 1);
+                    }
+                    else {
+                        incomes.push({ "amount": item.amount, "category": item.category.name })
+                    }
+    
+    
                 }
-
-            }
-            else {
-                TotalBalance += item.amount;
-                IncomeAmount += item.amount;
-
-                let existingCategoryIndex = incomes.findIndex(i => i.category === item.category.name);
-                if (existingCategoryIndex > -1) {
-                    incomes = [...incomes, {
-                        "amount": incomes[existingCategoryIndex].amount + item.amount,
-                        "category": incomes[existingCategoryIndex].category
-                    }]
-                    incomes.splice(existingCategoryIndex, 1);
-                }
-                else {
-                    incomes.push({ "amount": item.amount, "category": item.category.name })
-                }
-
-
-            }
-        })
+            })
+        }
 
         expenses.map((i) => {
             i.percent = Math.round((100 * i.amount) / ExpenseAmount);
@@ -171,7 +172,6 @@ router.post("/getChartInfoByDate", auth, async (req, res) => {
             expenses,
             incomes
         }
-
 
         res.json(resData);
 

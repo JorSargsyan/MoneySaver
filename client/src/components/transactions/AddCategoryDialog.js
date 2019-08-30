@@ -10,7 +10,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { addCategoryPublic } from "../../actions/index"
+import { addCategoryPrivate ,addCategoryPublic} from "../../actions/index"
 
 const useStyles = makeStyles(theme => ({
     select: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function FormDialog({ addCategoryPublic}) {
+function FormDialog({ addCategoryPrivate ,addCategoryPublic,userRole}) {
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -58,8 +58,13 @@ function FormDialog({ addCategoryPublic}) {
             name: values.name,
             type: values.type
         }
-
-        addCategoryPublic(formData);
+        if(userRole == "superAdmin"){
+            addCategoryPublic(formData);
+        }
+        else{
+            addCategoryPrivate(formData);
+        }
+        
         setValues(() => ({
             name: "",
             type: ""
@@ -115,4 +120,8 @@ function FormDialog({ addCategoryPublic}) {
     );
 }
 
-export default connect(null, {addCategoryPublic })(FormDialog)
+const mapStateToProps = (state)=>({
+    userRole : state.auth.userData.data.role
+})
+
+export default connect(mapStateToProps, {addCategoryPrivate,addCategoryPublic })(FormDialog)

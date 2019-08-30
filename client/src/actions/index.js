@@ -221,7 +221,30 @@ export const addCategoryPublic = (formData) => {
                     "Content-Type": "application/json"
                 }
             }
-            const res = await axios.post("/api/categories/addPublic", formData, config);
+            const res = await axios.post("/api/categories/addPublicCategory", formData, config);
+
+            dispatch({
+                type: ADD_CATEGORY_SUCCESS,
+                payload : res.data
+            })
+        }
+        catch (err) {
+            dispatch({
+                type: ADD_CATEGORY_FAIL
+            })
+        }
+    }
+}
+
+export const addCategoryPrivate = (formData) => {
+    return async dispatch => {
+        try {
+            let config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+            const res = await axios.post("/api/categories/addCustomCategory", formData, config);
 
             dispatch({
                 type: ADD_CATEGORY_SUCCESS,
@@ -239,7 +262,7 @@ export const addCategoryPublic = (formData) => {
 export const getAllCategories = () => {
     return async dispatch => {
         try {
-            const res = await axios.get("/api/categories/getAllCategories");
+            const res = await axios.get("/api/categories/getAllCategoriesById");
             dispatch({
                 type: GET_ALL_CATEGORIES_SUCCESS,
                 payload: res.data

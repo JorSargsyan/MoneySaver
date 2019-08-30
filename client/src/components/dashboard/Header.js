@@ -18,9 +18,14 @@ const useStyles = makeStyles(theme => ({
     title: {
         flexGrow: 1,
     },
+    name : {
+        fontSize : 16,
+        fontWeight:"bold",
+        marginRight : 25
+    }
 }));
 
-function Header({logout}) {
+function Header({logout,user}) {
     const classes = useStyles();
 
 
@@ -30,21 +35,29 @@ function Header({logout}) {
 
     return (
         <div className={classes.root}>
-                    <AppBar position="static">
-                        <Toolbar>
-                            <Typography variant="h6" className={classes.title}>
-                            <Link to='/dashboard'>Money Saver</Link>
-                            </Typography>
-                            <Button color="inherit"><Link to="/dashboard/history">History</Link></Button>
-                            <Button onClick={e=>handleLogout(e)} color="inherit">
-                                LOG OUT
-                            </Button>
-                        </Toolbar>
-                    </AppBar>
-           
+                <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6" className={classes.title}>
+                    <Link to='/dashboard'>Money Saver</Link>
+                    </Typography>
+                    <p className={classes.name}>
+                    {
+                        !user.loading && user.data.name
+                    }
+                    </p>
+                    <Button color="inherit"><Link to="/dashboard/history">History</Link></Button>
+                    <Button onClick={e=>handleLogout(e)} color="inherit">
+                        LOG OUT
+                    </Button>
+                </Toolbar>
+            </AppBar>
         </div>
     );
 }
 
+const mapStateToProps = (state)=>({
+    user : state.auth.userData
+})
 
-export default connect(null,{logout})(Header)
+
+export default connect(mapStateToProps,{logout})(Header)

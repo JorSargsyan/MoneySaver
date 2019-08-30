@@ -18,31 +18,39 @@ router.post("/", [
     check("password", "Password should be not less than 6 characters.").isLength({ min: 6 })
 ], (async (req, res) => {
     const errors = validationResult(req);
-    const {email,password,name} = req.body;
+    const { email, password, name, role } = req.body;
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        let user = await User.findOne({"email":email});
+        let user = await User.findOne({ "email": email });
 
-        if(user){
-            return res.status(400).json({errors:{msg:"User already exists"}});
+        if (user) {
+            return res.status(400).json({ errors: { msg: "User already exists" } });
         }
 
-        user = new User({
-            name,email,password
-        })
+        if (role == "superAdmin") {
+            user = new User({
+                name, email, password, role
+            })
+        }
+        else{
+            user = new User({
+                name, email, password
+            })
+        }
+      
 
         //encrypt a password using bcrypt
 
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password,salt);
+        user.password = await bcrypt.hash(password, salt);
 
         await user.save();
 
-        res.json({msg: "You are succesfully registered,and now you can try to sign in"});
+        res.json({ msg: "You are succesfully registered,and now you can try to sign in" });
 
     } catch (error) {
         console.log(error.message);

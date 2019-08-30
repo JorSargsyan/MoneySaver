@@ -53,7 +53,8 @@ router.post("/",[
 
             const encryptionData = {
                 user:{
-                    id:user.id
+                    id:user.id,
+                    role : user.role
                 }
             }
 

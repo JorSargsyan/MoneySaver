@@ -57,19 +57,19 @@ function Chart({userLoading,transactions, fromDate, toDate, loading ,getChartInf
             <Fragment>
                 <Paper className={classes.root}>
                     <Typography variant="h5"  component="h3">
-                        Total Balance <span className={chartInfo.TotalBalance < 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.TotalBalance}</span>
+                        Total Balance <span className={chartInfo.TotalBalance < 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.TotalBalance} AMD</span>
                     </Typography>
                 </Paper>
                 <div className={classes.paperContainer}>
                     <Paper className={classes.root}>
                         <Typography variant="h5" className={classes.textAlign} component="h3">
-                            Expense Amount <span className={chartInfo.ExpenseAmount > 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.ExpenseAmount}</span>
+                            Expense Amount <span className={chartInfo.ExpenseAmount > 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.ExpenseAmount} AMD</span>
                         </Typography>
                          <Donut labels={expenseChartData.labels} series={expenseChartData.series} />
                     </Paper>
                     <Paper className={classes.root}>
                         <Typography variant="h5" className={classes.textAlign} component="h3">
-                            Income Amount <span className={chartInfo.IncomeAmount <= 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.IncomeAmount}</span>
+                            Income Amount <span className={chartInfo.IncomeAmount <= 0 ? classes.redBalance : classes.greenBalance}>{chartInfo.IncomeAmount} AMD</span>
                         </Typography>
                           <Donut labels={incomeChartData.labels} series={incomeChartData.series} />
                     </Paper>

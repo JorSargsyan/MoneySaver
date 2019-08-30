@@ -9,8 +9,9 @@ const CategorySchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    icon:{
-        type:String,
+    isPublic :{
+        type : Boolean,
+        default : true
     },
     transactionType:{
         type:mongoose.Schema.Types.ObjectId,

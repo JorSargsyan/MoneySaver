@@ -14,19 +14,23 @@ class Donut extends Component {
             expandOnClick: false
           }
         },
-        labels: this.props.labels
+        legend : {
+          show : true,
+          position : "bottom"
+        },
+        labels: this.props.labels 
       },
-      series : this.props.series
+      series : this.props.series 
     }
   }
 
 
   static getDerivedStateFromProps(props, state){
     return {
-      series: props.series,
+      series: props.series.length ? props.series : [0] ,
       options : {
         ...state.options,
-        labels: props.labels
+        labels: props.labels.length ? props.labels : ["No Data"]
       }
     };
   }
